@@ -1,4 +1,4 @@
-package Network;
+package network;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -13,17 +13,10 @@ public class ServerHandler
 		serverSocket = new ServerSocket(port);
 	}
 
-	public Socket getNewClient()
+	public Socket getNewClient() throws IOException
 	{
 		Socket clientSocket = null;
-		try
-		{
-			clientSocket = serverSocket.accept();
-		}
-		catch (IOException e)
-		{
-			System.err.println("Accept failed.");
-		}
+		clientSocket = serverSocket.accept();
 		return (clientSocket);
 	}
 }
