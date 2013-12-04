@@ -9,6 +9,13 @@ import java.awt.event.WindowListener;
 
 public class ServerControler implements ActionListener, FocusListener, WindowListener
 {
+	private ServerMainView	mainFrame;
+	
+	public ServerControler(ServerMainView conversionFrame)
+	{
+		setConversionFrame(conversionFrame);
+	}
+
 	@Override
 	public void windowActivated(WindowEvent arg0){}
 	
@@ -16,7 +23,12 @@ public class ServerControler implements ActionListener, FocusListener, WindowLis
 	public void windowClosed(WindowEvent arg0){}
 	
 	@Override
-	public void windowClosing(WindowEvent arg0){}
+	public void windowClosing(WindowEvent e)
+	{
+		mainFrame.setVisible(false);
+		mainFrame.dispose();
+		System.exit(1);
+	}
 
 	@Override
 	public void windowDeactivated(WindowEvent arg0){}
@@ -38,4 +50,14 @@ public class ServerControler implements ActionListener, FocusListener, WindowLis
 
 	@Override
 	public void actionPerformed(ActionEvent arg0){}
+
+	public void setConversionFrame(ServerMainView conversionFrame)
+	{
+		this.mainFrame = conversionFrame;
+	}
+
+	public ServerMainView getView()
+	{
+		return (mainFrame);
+	}
 }

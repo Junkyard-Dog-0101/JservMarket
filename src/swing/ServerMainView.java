@@ -7,18 +7,20 @@ import java.awt.Toolkit;
 
 public class ServerMainView extends JFrame
 {
-	public ServerControler controler;
+	private ServerControler	controler;
+	private CommandView		panelCommand;
 
-	public ServerMainView(ServerControler newControler)
+	public ServerMainView()
 	{
-		super();
-		controler = newControler;
+		controler = new ServerControler(this);
+		panelCommand = new CommandView(controler);
 		stateOnCurrentObject();
 		addComponents();
 	}
 
 	public void stateOnCurrentObject()
 	{
+		addWindowListener(controler);
 		Dimension screenDimension = Toolkit.getDefaultToolkit().getScreenSize();
 		setSize(new Dimension(960, 540));
 		setResizable(false);
@@ -28,6 +30,16 @@ public class ServerMainView extends JFrame
 
 	public void addComponents()
 	{
-		add(new ListUserView());
+		add(panelCommand);
+	}
+	
+	public ServerControler getControler()
+	{
+		return (controler);
+	}
+	
+	public CommandView getCommandView()
+	{
+		return (panelCommand);
 	}
 }
