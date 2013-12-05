@@ -1,66 +1,53 @@
 package database;
 
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.SQLException;
 
-public class Users {
-	public DbManager		 	dbManager;
-	public Statement			myState;
-	public ResultSet			myResultSet;
-	
-	public ResultSetMetaData	myResultSetMetaData;
-	
-	public String 				arrayContent[][];
-	public String 				arrayHeader[];
-	
-	public List<String[]>		list;
-	
-	public Users(DbManager dbmanager) {
-		this.dbManager = dbmanager;
-		myState = this.dbManager.myState;
-		updateList();
+public class Users
+{
+	private Orm			requester;
+	public DbManager	dbManager;
+	public ResultSet	myResultSet;
+
+	public Users(Orm newOrm)
+	{
+		requester = newOrm;
 	}
-	
-	public void updateList() {
-		try {
-			
-			myResultSet 				= myState.executeQuery("SELECT * FROM users");
-			myResultSetMetaData			= myResultSet.getMetaData();
-			
-			int nbrColumn				= myResultSetMetaData.getColumnCount();
-			list						= new ArrayList<String[]>();
-			arrayHeader					= new String[nbrColumn];
-			
-			while (myResultSet.next())
-			{
-				String[] content 		= new String[nbrColumn];
-				for (int i = 0; i != nbrColumn; i++)
-				{
-					content[i] = myResultSet.getString(i + 1);
-				}
-				list.add(content);		
-			}
-			
-		} catch (Exception e) {
-	        e.printStackTrace();
-	      }	
-	}
-	
-	public void showList() {
-		for (int i = 0; i != list.size(); i++)
+
+	public boolean Login(String user, String password)
+	{
+		try
 		{
-			String[] tmp = list.get(i);
-			for (int j = 0; j != tmp.length; j++)
-			{
-				System.out.print(tmp[j] + " | ");
-			}
-			System.out.println("");
-		}	
-		System.out.println("--------------------------------------");
+			requester.select("*");
+			requester.from("users");
+			requester.where("login", "=", user);
+			requester.and("password", "=", password);
+			myResultSet = requester.query();
+			if (myResultSet.next())
+				return (true);
+			return (false);
+		}
+		catch (MyOrmException e)
+		{
+			return (false);
+		}
+		catch (SQLException e)
+		{
+			return (false);
+		}
 	}
-	
-	public List<String[]> getUsersList() { return list; }
+
+	public boolean Register(String user, String password)
+	{
+		requester.insert("users");
+		requester.column("login");
+		requester.column("password");
+		requester.columnBack();
+		requester.valuesString(user);
+		requester.valuesString(password);
+		requester.valuesBack();
+		if (requester.update() != 0)
+			return (true);
+		return (false);
+	}
 }

@@ -1,6 +1,9 @@
 package swing;
 
 import javax.swing.JFrame;
+
+import database.DbConnect;
+
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
@@ -12,7 +15,7 @@ public class ServerMainView extends JFrame
 
 	public ServerMainView()
 	{
-		controler = new ServerControler(this);
+		controler = new ServerControler(this, new DbConnect(new String("jdbc:mysql://localhost/jservmarket"), new String("root"), new String("")));
 		panelCommand = new CommandView(controler);
 		stateOnCurrentObject();
 		addComponents();

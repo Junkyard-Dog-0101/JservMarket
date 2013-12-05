@@ -7,12 +7,16 @@ import java.awt.event.FocusListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
+import database.DbConnect;
+
 public class ServerControler implements ActionListener, FocusListener, WindowListener
 {
 	private ServerMainView	mainFrame;
-
-	public ServerControler(ServerMainView conversionFrame)
+	private DbConnect		db;
+	
+	public ServerControler(ServerMainView conversionFrame, DbConnect newDb)
 	{
+		db = newDb;
 		setConversionFrame(conversionFrame);
 	}
 
@@ -21,63 +25,30 @@ public class ServerControler implements ActionListener, FocusListener, WindowLis
 		switch (tabCommands[0])
 		{
 			case "login":
-				login(tabCommands);
+				db.login(tabCommands);
 				break;
 			case "register":
-				register(tabCommands);
+				db.register(tabCommands);
 				break;
 			case "getproducts":
-				getProducts(tabCommands);
+				db.getProducts(tabCommands);
 				break;
 			case "getcategories":
-				getCategories(tabCommands);
+				db.getCategories(tabCommands);
 				break;
 			case "addtocart":
-				addToCart(tabCommands);
+				db.addToCart(tabCommands);
 				break;
 			case "pay":
-				pay(tabCommands);
+				db.pay(tabCommands);
 				break;
 			case "getcartcontent":
-				getCartContent(tabCommands);
+				db.getCartContent(tabCommands);
 				break;
 		}
 	}
 
-	private void login(String[] tabCommands)
-	{
-		System.out.println("login");
-	}
-
-	private void register(String[] tabCommands)
-	{
-		
-	}
-
-	private void getProducts(String[] tabCommands)
-	{
-		
-	}
-
-	private void getCategories(String[] tabCommands)
-	{
-		
-	}
-
-	private void addToCart(String[] tabCommands)
-	{
 	
-	}
-
-	private void pay(String[] tabCommands)
-	{
-		
-	}
-
-	private void getCartContent(String[] tabCommands)
-	{
-		
-	}
 	
 	@Override
 	public void windowActivated(WindowEvent arg0){}

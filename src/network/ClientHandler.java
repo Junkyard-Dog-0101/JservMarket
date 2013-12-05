@@ -46,7 +46,7 @@ public class ClientHandler implements Runnable
 					clientSocket.close();
 					break;
 				}
-				controler.getView().getCommandView().updateContent(clientSocket.getInetAddress().getHostAddress() + "\t: " + buf);
+				controler.getView().getCommandView().updateContent(clientSocket.getInetAddress().getHostAddress() + " : " + buf);
 				String str[] = buf.split(";");
 				controler.getCommand(str);
 				//controler.getView().getCommandView().entries.elementAt(0);
