@@ -25,7 +25,7 @@ public class ServerMainView extends JFrame
 		setSize(new Dimension(960, 540));
 		setResizable(false);
 		setLocation((screenDimension.width - 960) / 2, (screenDimension.height - 540) / 2);
-		setLayout(new GridLayout(1, 2));
+		setLayout(new GridLayout(2, 1));
 	}
 
 	public void addComponents()

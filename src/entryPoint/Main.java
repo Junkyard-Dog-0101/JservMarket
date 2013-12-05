@@ -2,7 +2,6 @@ package entryPoint;
 
 import java.io.IOException;
 import java.net.Socket;
-
 import network.ClientHandler;
 import network.ServerHandler;
 import swing.ServerControler;
@@ -11,7 +10,7 @@ import swing.ServerMainView;
 public class Main
 {
 	public ServerMainView swingFrame;
-	
+
 	public static void main(String argv[])
 	{
 		new Main();
@@ -48,7 +47,7 @@ public class Main
 			
 		}
 	}
-	
+
 	public void handleException(Exception e)
 	{
 		System.out.println("exception " + e.toString());

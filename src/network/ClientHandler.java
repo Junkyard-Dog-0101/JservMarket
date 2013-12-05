@@ -47,6 +47,8 @@ public class ClientHandler implements Runnable
 					break;
 				}
 				controler.getView().getCommandView().updateContent(clientSocket.getInetAddress().getHostAddress() + "\t: " + buf);
+				String str[] = buf.split(";");
+				controler.getCommand(str);
 				//controler.getView().getCommandView().entries.elementAt(0);
 				//writeOnClient(controler.getView().getCommandView().entries.elementAt(0));
 				writeOnClient("connasse");

@@ -10,12 +10,75 @@ import java.awt.event.WindowListener;
 public class ServerControler implements ActionListener, FocusListener, WindowListener
 {
 	private ServerMainView	mainFrame;
-	
+
 	public ServerControler(ServerMainView conversionFrame)
 	{
 		setConversionFrame(conversionFrame);
 	}
 
+	public void getCommand(String[] tabCommands)
+	{
+		switch (tabCommands[0])
+		{
+			case "login":
+				login(tabCommands);
+				break;
+			case "register":
+				register(tabCommands);
+				break;
+			case "getproducts":
+				getProducts(tabCommands);
+				break;
+			case "getcategories":
+				getCategories(tabCommands);
+				break;
+			case "addtocart":
+				addToCart(tabCommands);
+				break;
+			case "pay":
+				pay(tabCommands);
+				break;
+			case "getcartcontent":
+				getCartContent(tabCommands);
+				break;
+		}
+	}
+
+	private void login(String[] tabCommands)
+	{
+		System.out.println("login");
+	}
+
+	private void register(String[] tabCommands)
+	{
+		
+	}
+
+	private void getProducts(String[] tabCommands)
+	{
+		
+	}
+
+	private void getCategories(String[] tabCommands)
+	{
+		
+	}
+
+	private void addToCart(String[] tabCommands)
+	{
+	
+	}
+
+	private void pay(String[] tabCommands)
+	{
+		
+	}
+
+	private void getCartContent(String[] tabCommands)
+	{
+		
+	}
+	
 	@Override
 	public void windowActivated(WindowEvent arg0){}
 	
