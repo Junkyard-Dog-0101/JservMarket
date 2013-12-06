@@ -1,5 +1,7 @@
 package database;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import database.Cart;
 import database.DbManager;
 import database.Products;
@@ -13,21 +15,28 @@ public class DbConnect
 	public Products		products;
 	public Users		users;
 	public Cart			cart;
+	public ResultSet	lastResult;
 
 	public DbConnect(String newUrl, String newUser, String newPassword)
 	{
 		myOrm = new Orm(new DbManager(newUrl, newUser, newPassword));
+		user = new Users(myOrm);
 	}
 	
 	public boolean login(String[] tabCommands)
 	{
 		if (tabCommands.length >= 3)
 		{
-			if (user == null)
-			{
-				user = new Users(myOrm);
-			}
-			return (user.Login(tabCommands[1], tabCommands[2]));
+			lastResult = user.Login(tabCommands[1], tabCommands[2]);
+				try
+				{
+					if (lastResult.next())
+						return (true);
+				}
+				catch (SQLException e)
+				{
+					
+				}
 		}
 		return (false);
 	}
@@ -36,10 +45,7 @@ public class DbConnect
 	{
 		if (tabCommands.length >= 3)
 		{
-			if (user == null)
-			{
-				user = new Users(myOrm);
-			}
+			lastResult = null;
 			return (user.Register(tabCommands[1], tabCommands[2]));
 		}
 		return (false);

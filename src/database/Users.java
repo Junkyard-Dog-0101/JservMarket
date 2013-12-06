@@ -14,27 +14,28 @@ public class Users
 		requester = newOrm;
 	}
 
-	public boolean Login(String user, String password)
+	public ResultSet Login(String user, String password)
 	{
 		try
 		{
+			requester.clear();
 			requester.select("*");
 			requester.from("users");
 			requester.where("login", "=", user);
 			requester.and("password", "=", password);
 			myResultSet = requester.query();
-			if (myResultSet.next())
-				return (true);
-			return (false);
+			//if (myResultSet.next())
+				//return (true);
+			return (myResultSet);
 		}
 		catch (MyOrmException e)
 		{
-			return (false);
+			return (null);
 		}
-		catch (SQLException e)
+	/*	catch (SQLException e)
 		{
-			return (false);
-		}
+			return (null);
+		} */
 	}
 
 	public boolean Register(String user, String password)

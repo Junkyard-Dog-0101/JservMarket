@@ -20,16 +20,20 @@ public class ServerControler implements ActionListener, FocusListener, WindowLis
 		setConversionFrame(conversionFrame);
 	}
 
-	public void getCommand(String[] tabCommands)
+	public synchronized String getCommand(String[] tabCommands)
 	{
 		switch (tabCommands[0])
 		{
 			case "login":
-				db.login(tabCommands);
-				break;
+				if (db.login(tabCommands) == true)
+					return ("you are connected");
+				else
+					return ("wrong combination login/password");
 			case "register":
-				db.register(tabCommands);
-				break;
+				if (db.register(tabCommands) == true)
+					return ("you are regsitered");
+				else
+					return ("something goes wrong");
 			case "getproducts":
 				db.getProducts(tabCommands);
 				break;
@@ -46,6 +50,7 @@ public class ServerControler implements ActionListener, FocusListener, WindowLis
 				db.getCartContent(tabCommands);
 				break;
 		}
+		return (new String("invalid command"));
 	}
 
 	
@@ -90,7 +95,7 @@ public class ServerControler implements ActionListener, FocusListener, WindowLis
 		this.mainFrame = conversionFrame;
 	}
 
-	public ServerMainView getView()
+	public synchronized ServerMainView getView()
 	{
 		return (mainFrame);
 	}

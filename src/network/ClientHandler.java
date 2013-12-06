@@ -48,10 +48,7 @@ public class ClientHandler implements Runnable
 				}
 				controler.getView().getCommandView().updateContent(clientSocket.getInetAddress().getHostAddress() + " : " + buf);
 				String str[] = buf.split(";");
-				controler.getCommand(str);
-				//controler.getView().getCommandView().entries.elementAt(0);
-				//writeOnClient(controler.getView().getCommandView().entries.elementAt(0));
-				writeOnClient("connasse");
+				writeOnClient(controler.getCommand(str));
 			}
 		}
 		catch (IOException e)

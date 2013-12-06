@@ -123,6 +123,7 @@ public class Orm
 
 	public ResultSet query()
 	{
+		System.out.println(mSelect + mWhere);
 		try
 		{
 			return (db.executeQuery(mSelect + mWhere));
@@ -148,5 +149,14 @@ public class Orm
 			
 		}
 		return (0);
+	}
+
+	public void clear()
+	{
+		mSelect = null;
+		mInsert = null;
+		mValues = null;
+		mColumn = null;
+		mWhere = null;
 	}
 }
