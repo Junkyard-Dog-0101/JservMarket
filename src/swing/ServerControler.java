@@ -35,11 +35,11 @@ public class ServerControler implements ActionListener, FocusListener, WindowLis
 				else
 					return ("something goes wrong");
 			case "getproducts":
-				db.getProducts(tabCommands);
-				break;
+				if (db.getProducts(tabCommands))
+					return (db.getData(1));
 			case "getcategories":
-				db.getCategories(tabCommands);
-				break;
+				if (db.getCategories(tabCommands))
+					return (db.getData(1));
 			case "addtocart":
 				db.addToCart(tabCommands);
 				break;

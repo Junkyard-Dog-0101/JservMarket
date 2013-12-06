@@ -24,18 +24,12 @@ public class Users
 			requester.where("login", "=", user);
 			requester.and("password", "=", password);
 			myResultSet = requester.query();
-			//if (myResultSet.next())
-				//return (true);
 			return (myResultSet);
 		}
 		catch (MyOrmException e)
 		{
 			return (null);
 		}
-	/*	catch (SQLException e)
-		{
-			return (null);
-		} */
 	}
 
 	public boolean Register(String user, String password)

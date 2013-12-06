@@ -126,7 +126,10 @@ public class Orm
 		System.out.println(mSelect + mWhere);
 		try
 		{
-			return (db.executeQuery(mSelect + mWhere));
+			if (mWhere != null)
+				return (db.executeQuery(mSelect + mWhere));
+			else
+				return (db.executeQuery(mSelect));
 		}
 		catch (SQLException e)
 		{

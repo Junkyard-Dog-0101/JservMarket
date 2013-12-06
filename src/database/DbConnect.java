@@ -11,6 +11,8 @@ public class DbConnect
 {
 	private Orm			myOrm;
 	private Users		user;
+	private Products	product;
+	private Categories	categorie;
 	public DbManager	dbManager;
 	public Products		products;
 	public Users		users;
@@ -21,6 +23,8 @@ public class DbConnect
 	{
 		myOrm = new Orm(new DbManager(newUrl, newUser, newPassword));
 		user = new Users(myOrm);
+		categorie = new Categories(myOrm);
+		product = new Products(myOrm);
 	}
 	
 	public boolean login(String[] tabCommands)
@@ -53,11 +57,13 @@ public class DbConnect
 
 	public boolean getProducts(String[] tabCommands)
 	{
-		return (true);	
+		lastResult = product.getDesignationCategories();
+		return (true);
 	}
 
 	public boolean getCategories(String[] tabCommands)
 	{
+		lastResult = categorie.getLabelCategories();
 		return (true);
 	}
 
@@ -74,5 +80,26 @@ public class DbConnect
 	public boolean getCartContent(String[] tabCommands)
 	{
 		return (true);
+	}
+	
+	public String getData(int nbrColumn)
+	{
+		String concatString = new String();
+		try
+		{
+			while (lastResult.next())
+			{
+				for (int i = 1; i <= nbrColumn; ++i)
+				{
+					concatString += lastResult.getString(i);
+					concatString += ";";
+				}
+			}
+			return(concatString);
+		}
+		catch (SQLException e)
+		{
+			return (null);
+		}
 	}
 }

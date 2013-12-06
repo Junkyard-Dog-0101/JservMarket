@@ -1,29 +1,25 @@
 package database;
 
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
-public class Products {
-	
+public class Categories
+{
 	private Orm			requester;
 	public DbManager	dbManager;
 	public ResultSet	myResultSet;
 
-	public Products(Orm newOrm)
+	public Categories(Orm newOrm)
 	{
 		requester = newOrm;
 	}
 
-	public ResultSet getDesignationCategories()
+	public ResultSet getLabelCategories()
 	{
 		try
 		{
 			requester.clear();
-			requester.select("designation");
-			requester.from("products");
+			requester.select("label");
+			requester.from("categories");
 			myResultSet = requester.query();
 			return (myResultSet);
 		}
