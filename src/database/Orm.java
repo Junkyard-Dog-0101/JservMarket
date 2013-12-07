@@ -5,24 +5,16 @@ import java.sql.SQLException;
 
 public class Orm
 {
-	private String		mSelect;
-	private String		mInsert;
-	private String		mValues;
-	private String		mColumn;
-	private String		mWhere;
-	private DbManager	db;
+	private String				mSelect;
+	private String				mInsert;
+	private String				mValues;
+	private String				mColumn;
+	private String				mWhere;
+	private static DbConnect	db;
 
-	public Orm(DbManager newDb)
+	public Orm()
 	{
-		db = newDb;
-		try
-		{
-			db.connectDb();
-		}
-		catch (Exception e)
-		{
-			System.err.println("unable to connect db");
-		}
+		db = DbConnect.getInstance();
 	}
 
 	public Orm insert(String s)

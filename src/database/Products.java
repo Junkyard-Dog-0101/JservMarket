@@ -9,7 +9,7 @@ import java.util.List;
 public class Products {
 	
 	private Orm			requester;
-	public DbManager	dbManager;
+	public DbConnect	dbManager;
 	public ResultSet	myResultSet;
 
 	public Products(Orm newOrm)

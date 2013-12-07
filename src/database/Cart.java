@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Cart {
 	
-	public DbManager		 	dbManager;
+	public DbConnect		 	dbManager;
 	public Statement			myState;
 	public ResultSet			myResultSet;
 	
@@ -19,7 +19,7 @@ public class Cart {
 	
 	public List<String[]>		list;
 	
-	public Cart(DbManager dbmanager) {
+	public Cart(DbConnect dbmanager) {
 		this.dbManager = dbmanager;
 		myState = this.dbManager.myState;
 		updateList();

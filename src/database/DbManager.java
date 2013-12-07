@@ -1,53 +1,106 @@
 package database;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.List;
+import database.Cart;
+import database.Products;
+import database.Users;
 
 public class DbManager
 {
-	private String	url;
-	private String	user;
-	private String	password;
+	private Orm			myOrm;
+	private Users		user;
+	private Products	product;
+	private Categories	categorie;
+	private int			userId;
+	private Products	products;
+	private Cart		cart;
+	private	ResultSet	lastResult;
 
-	public Connection 			myConnect;
-	public Statement			myState;
-	public ResultSet			myResultSet;
-	
-	public ResultSetMetaData	myResultSetMetaData;
-	
-	public String 				arrayContent[][];
-	public String 				arrayHeader[];
-	
-	public List<String[]>		productList;
-	public List<String[]>		cartList;
-	public List<String[]>		usersList;
-
-	public DbManager(String newUrl, String newUser, String newPassword)
+	public DbManager()
 	{
-		url = newUrl;
-		user = newUser;
-		password = newPassword;
+		myOrm = new Orm();
+		user = new Users(myOrm);
+		categorie = new Categories(myOrm);
+		product = new Products(myOrm);
 	}
 
-	public void connectDb() throws Exception
+	public boolean login(String[] tabCommands)
 	{
-		Class.forName("com.mysql.jdbc.Driver");
-		Connection myConnect = DriverManager.getConnection(url, user, password);
-		myState = myConnect.createStatement();
+		if (tabCommands.length >= 3)
+		{
+			lastResult = user.Login(tabCommands[1], tabCommands[2]);
+			try
+			{
+				if (lastResult.next())
+				{
+					userId = Integer.parseInt((lastResult.getString(0)));
+					return (true);
+				}
+			}
+			catch (SQLException e)
+			{
+				
+			}
+		}
+		return (false);
 	}
 
-	public ResultSet executeQuery(String query) throws SQLException
+	public boolean register(String[] tabCommands)
 	{
-		return (myState.executeQuery(query));
+		if (tabCommands.length >= 3)
+		{
+			lastResult = null;
+			return (user.Register(tabCommands[1], tabCommands[2]));
+		}
+		return (false);
+	}
+
+	public boolean getProducts(String[] tabCommands)
+	{
+		lastResult = product.getDesignationCategories();
+		return (true);
+	}
+
+	public boolean getCategories(String[] tabCommands)
+	{
+		lastResult = categorie.getLabelCategories();
+		return (true);
+	}
+
+	public boolean addToCart(String[] tabCommands)
+	{
+		return (true);
+	}
+
+	public boolean pay(String[] tabCommands)
+	{
+		return (true);
+	}
+
+	public boolean getCartContent(String[] tabCommands)
+	{
+		return (true);
 	}
 	
-	public int executeUpdate(String query) throws SQLException
+	public String getData(int nbrColumn)
 	{
-		return (myState.executeUpdate(query));
+		String concatString = new String();
+		try
+		{
+			while (lastResult.next())
+			{
+				for (int i = 1; i <= nbrColumn; ++i)
+				{
+					concatString += lastResult.getString(i);
+					concatString += ";";
+				}
+			}
+			return (concatString);
+		}
+		catch (SQLException e)
+		{
+			return (null);
+		}
 	}
 }

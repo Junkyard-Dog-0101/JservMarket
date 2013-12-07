@@ -5,7 +5,7 @@ import java.sql.ResultSet;
 public class Categories
 {
 	private Orm			requester;
-	public DbManager	dbManager;
+	public DbConnect	dbManager;
 	public ResultSet	myResultSet;
 
 	public Categories(Orm newOrm)

@@ -6,21 +6,18 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-
-import database.DbConnect;
+import database.DbManager;
 
 public class ServerControler implements ActionListener, FocusListener, WindowListener
 {
 	private ServerMainView	mainFrame;
-	private DbConnect		db;
-	
-	public ServerControler(ServerMainView conversionFrame, DbConnect newDb)
+
+	public ServerControler(ServerMainView conversionFrame)
 	{
-		db = newDb;
 		setConversionFrame(conversionFrame);
 	}
 
-	public synchronized String getCommand(String[] tabCommands, String login)
+	public synchronized String getCommand(String[] tabCommands, String login, DbManager db)
 	{
 		switch (tabCommands[0])
 		{
@@ -53,8 +50,6 @@ public class ServerControler implements ActionListener, FocusListener, WindowLis
 		return (new String("invalid command"));
 	}
 
-	
-	
 	@Override
 	public void windowActivated(WindowEvent arg0){}
 	

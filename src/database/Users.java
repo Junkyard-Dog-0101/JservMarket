@@ -6,7 +6,7 @@ import java.sql.SQLException;
 public class Users
 {
 	private Orm			requester;
-	public DbManager	dbManager;
+	public DbConnect	dbManager;
 	public ResultSet	myResultSet;
 
 	public Users(Orm newOrm)

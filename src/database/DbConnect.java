@@ -1,105 +1,53 @@
 package database;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import database.Cart;
-import database.DbManager;
-import database.Products;
-import database.Users;
+import java.sql.Statement;
 
 public class DbConnect
 {
-	private Orm			myOrm;
-	private Users		user;
-	private Products	product;
-	private Categories	categorie;
-	public DbManager	dbManager;
-	public Products		products;
-	public Users		users;
-	public Cart			cart;
-	public ResultSet	lastResult;
+	private String				url = "jdbc:mysql://localhost/jservmarket";
+	private String				user = "root";
+	private String				password = "";
+	public Statement			myState;
+	private static DbConnect	currentDb;
 
-	public DbConnect(String newUrl, String newUser, String newPassword)
+	private DbConnect()
 	{
-		myOrm = new Orm(new DbManager(newUrl, newUser, newPassword));
-		user = new Users(myOrm);
-		categorie = new Categories(myOrm);
-		product = new Products(myOrm);
-	}
-	
-	public boolean login(String[] tabCommands)
-	{
-		if (tabCommands.length >= 3)
-		{
-			lastResult = user.Login(tabCommands[1], tabCommands[2]);
-				try
-				{
-					if (lastResult.next())
-						return (true);
-				}
-				catch (SQLException e)
-				{
-					
-				}
-		}
-		return (false);
-	}
-
-	public boolean register(String[] tabCommands)
-	{
-		if (tabCommands.length >= 3)
-		{
-			lastResult = null;
-			return (user.Register(tabCommands[1], tabCommands[2]));
-		}
-		return (false);
-	}
-
-	public boolean getProducts(String[] tabCommands)
-	{
-		lastResult = product.getDesignationCategories();
-		return (true);
-	}
-
-	public boolean getCategories(String[] tabCommands)
-	{
-		lastResult = categorie.getLabelCategories();
-		return (true);
-	}
-
-	public boolean addToCart(String[] tabCommands)
-	{
-		return (true);
-	}
-
-	public boolean pay(String[] tabCommands)
-	{
-		return (true);
-	}
-
-	public boolean getCartContent(String[] tabCommands)
-	{
-		return (true);
-	}
-	
-	public String getData(int nbrColumn)
-	{
-		String concatString = new String();
 		try
 		{
-			while (lastResult.next())
-			{
-				for (int i = 1; i <= nbrColumn; ++i)
-				{
-					concatString += lastResult.getString(i);
-					concatString += ";";
-				}
-			}
-			return(concatString);
+			connectDb();
 		}
-		catch (SQLException e)
+		catch (Exception e)
 		{
-			return (null);
+			System.err.println("unable to connect db");
 		}
+	}
+
+	private void connectDb() throws Exception
+	{
+		Class.forName("com.mysql.jdbc.Driver");
+		Connection myConnect = DriverManager.getConnection(url, user, password);
+		myState = myConnect.createStatement();
+	}
+
+	public ResultSet executeQuery(String query) throws SQLException
+	{
+		return (currentDb.myState.executeQuery(query));
+	}
+
+	public int executeUpdate(String query) throws SQLException
+	{
+		return (currentDb.myState.executeUpdate(query));
+	}
+
+	public static DbConnect getInstance()
+	{
+		if (currentDb == null)
+			return (currentDb = new DbConnect());
+		else
+			return (currentDb);
 	}
 }

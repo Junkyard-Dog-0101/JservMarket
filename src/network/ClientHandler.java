@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import database.DbManager;
 import swing.ServerControler;
 
 public class ClientHandler implements Runnable
@@ -16,9 +17,11 @@ public class ClientHandler implements Runnable
 	private ServerControler controler;
 	private String			login;
 	private String			cmd;
-	
+	private DbManager		db;
+
 	public ClientHandler(Socket newClientSocket, ServerControler newControler) throws IOException
 	{
+		db = new DbManager();
 		clientSocket = newClientSocket;
 		controler = newControler;
 		out = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -50,7 +53,7 @@ public class ClientHandler implements Runnable
 				}
 				controler.getView().getCommandView().updateContent(clientSocket.getInetAddress().getHostAddress() + " : " + buf);
 				String str[] = buf.split(";");
-				if ((cmd = controler.getCommand(str, login)) == "you are connected")
+				if ((cmd = controler.getCommand(str, login, db)) == "you are connected")
 				{
 					if (login == null)
 					{
