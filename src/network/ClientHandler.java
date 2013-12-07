@@ -10,11 +10,13 @@ import swing.ServerControler;
 
 public class ClientHandler implements Runnable
 {
-	private Socket clientSocket;
-	private PrintWriter out;
-	private BufferedReader in;
+	private Socket			clientSocket;
+	private PrintWriter		out;
+	private BufferedReader	in;
 	private ServerControler controler;
-
+	private String			login;
+	private String			cmd;
+	
 	public ClientHandler(Socket newClientSocket, ServerControler newControler) throws IOException
 	{
 		clientSocket = newClientSocket;
@@ -48,7 +50,18 @@ public class ClientHandler implements Runnable
 				}
 				controler.getView().getCommandView().updateContent(clientSocket.getInetAddress().getHostAddress() + " : " + buf);
 				String str[] = buf.split(";");
-				writeOnClient(controler.getCommand(str));
+				if ((cmd = controler.getCommand(str, login)) == "you are connected")
+				{
+					if (login == null)
+					{
+						login = str[1];
+					}
+					else
+					{
+						cmd = "you are already connected";
+					}
+				}
+				writeOnClient(cmd);
 			}
 		}
 		catch (IOException e)

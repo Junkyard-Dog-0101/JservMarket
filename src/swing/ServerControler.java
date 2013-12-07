@@ -20,7 +20,7 @@ public class ServerControler implements ActionListener, FocusListener, WindowLis
 		setConversionFrame(conversionFrame);
 	}
 
-	public synchronized String getCommand(String[] tabCommands)
+	public synchronized String getCommand(String[] tabCommands, String login)
 	{
 		switch (tabCommands[0])
 		{
@@ -31,7 +31,7 @@ public class ServerControler implements ActionListener, FocusListener, WindowLis
 					return ("wrong combination login/password");
 			case "register":
 				if (db.register(tabCommands) == true)
-					return ("you are regsitered");
+					return ("you are registered");
 				else
 					return ("something goes wrong");
 			case "getproducts":
