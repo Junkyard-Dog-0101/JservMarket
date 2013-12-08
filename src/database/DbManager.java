@@ -2,7 +2,6 @@ package database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import database.Cart;
 import database.Products;
 import database.Users;
 
@@ -10,17 +9,17 @@ public class DbManager
 {
 	private Orm			myOrm;
 	private Users		user;
+	private Cart		cart;
 	private Products	product;
 	private Categories	categorie;
-	private int			userId;
-	private Products	products;
-	private Cart		cart;
+	private String		userId;
 	private	ResultSet	lastResult;
 
 	public DbManager()
 	{
 		myOrm = new Orm();
 		user = new Users(myOrm);
+		cart = new Cart(myOrm);
 		categorie = new Categories(myOrm);
 		product = new Products(myOrm);
 	}
@@ -29,12 +28,12 @@ public class DbManager
 	{
 		if (tabCommands.length >= 3)
 		{
-			lastResult = user.Login(tabCommands[1], tabCommands[2]);
+			lastResult = user.login(tabCommands[1], tabCommands[2]);
 			try
 			{
 				if (lastResult.next())
 				{
-					userId = Integer.parseInt((lastResult.getString(0)));
+					userId = lastResult.getString(1);
 					return (true);
 				}
 			}
@@ -51,26 +50,32 @@ public class DbManager
 		if (tabCommands.length >= 3)
 		{
 			lastResult = null;
-			return (user.Register(tabCommands[1], tabCommands[2]));
+			return (user.register(tabCommands[1], tabCommands[2]));
 		}
-		return (false);
+		else
+		{
+			return (false);
+		}
 	}
 
 	public boolean getProducts(String[] tabCommands)
 	{
-		lastResult = product.getDesignationCategories();
+		lastResult = product.getProducts();
 		return (true);
 	}
 
 	public boolean getCategories(String[] tabCommands)
 	{
-		lastResult = categorie.getLabelCategories();
+		lastResult = categorie.getCategories();
 		return (true);
 	}
 
 	public boolean addToCart(String[] tabCommands)
 	{
-		return (true);
+		if (userId.isEmpty() || (tabCommands.length < 3))
+			return (false);
+		else
+			return (cart.addContentToCart(userId, tabCommands[1], tabCommands[2], product));
 	}
 
 	public boolean pay(String[] tabCommands)

@@ -1,81 +1,52 @@
 package database;
 
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
-public class Cart {
-	
-	public DbConnect		 	dbManager;
-	public Statement			myState;
-	public ResultSet			myResultSet;
-	
-	public ResultSetMetaData	myResultSetMetaData;
-	
-	public String 				arrayContent[][];
-	public String 				arrayHeader[];
-	
-	public List<String[]>		list;
-	
-	public Cart(DbConnect dbmanager) {
-		this.dbManager = dbmanager;
-		myState = this.dbManager.myState;
-		updateList();
+public class Cart
+{
+	private Orm			requester;
+	public ResultSet	myResultSet;
+
+	public Cart(Orm newOrm)
+	{
+		requester = newOrm;
 	}
-	
-	public void updateList() {
-		try {
-			
-			myResultSet 				= myState.executeQuery("SELECT * FROM cart");
-			myResultSetMetaData			= myResultSet.getMetaData();
-			
-			int nbrColumn				= myResultSetMetaData.getColumnCount();
-			list						= new ArrayList<String[]>();
-			arrayHeader					= new String[nbrColumn];
-			
-			while (myResultSet.next())
-			{
-				String[] content 		= new String[nbrColumn];
-				for (int i = 0; i != nbrColumn; i++)
-				{
-					content[i] = myResultSet.getString(i + 1);
-				}
-				list.add(content);		
-			}
-			
-		} catch (Exception e) {
-	        e.printStackTrace();
-	      }	
-	}
-	
-	public void showList() {
-		for (int i = 0; i != list.size(); i++)
+
+	public ResultSet getCartContentByIdUser(int id)
+	{
+		try
 		{
-			String[] tmp = list.get(i);
-			for (int j = 0; j != tmp.length; j++)
-			{
-				System.out.print(tmp[j] + " | ");
-			}
-			System.out.println("");
-		}	
-		System.out.println("--------------------------------------");
-	}
-	
-	public void addItem() {
-		
-	}
-	
-	public void deleteAllItem() {
-		try {
-			myState.executeUpdate("DELETE FROM cart");
-			updateList();
-		} catch (Exception e) {
-			e.printStackTrace();
+			requester.clear();
+			requester.select("*");
+			requester.from("products");
+			myResultSet = requester.query();
+			return (myResultSet);
+		}
+		catch (MyOrmException e)
+		{
+			return (null);
 		}
 	}
-	
-	public List<String[]> getCartList() { return list; }
 
+	public boolean addContentToCart(String idUser, String idProduct, String quantity, Products product)
+	{
+		if (!product.tryDeleteQuantityFromProduct(quantity, idProduct))
+		{
+			return (false);
+		}
+		requester.clear();
+		/* bug en base de donnée : créé des doublons */
+		requester.insert("cart");
+		requester.column("userid");
+		requester.column("productid");
+		requester.column("quantity");
+		requester.columnBack();
+		requester.valuesInt(idUser);
+		requester.valuesInt(idProduct);
+		requester.valuesInt(quantity);
+		requester.valuesBack();
+		if (requester.exeUpdate() != 0)
+			return (true);
+		return (false);
+	}
 }

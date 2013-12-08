@@ -6,26 +6,41 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.ArrayList;
+import java.util.List;
+
 import database.DbManager;
 
 public class ServerControler implements ActionListener, FocusListener, WindowListener
 {
 	private ServerMainView	mainFrame;
+	private List<String>	loginList;
 
 	public ServerControler(ServerMainView conversionFrame)
 	{
+		loginList = new ArrayList<String>();
 		setConversionFrame(conversionFrame);
 	}
 
-	public synchronized String getCommand(String[] tabCommands, String login, DbManager db)
+	public String getCommand(String[] tabCommands, DbManager db)
 	{
 		switch (tabCommands[0])
 		{
 			case "login":
 				if (db.login(tabCommands) == true)
-					return ("you are connected");
+				{
+					if (!loginList.contains(tabCommands[1]))
+					{
+						/* risque de caca si plusieur user se log */
+						loginList.add(tabCommands[1]);
+						return ("you are connected");
+					}
+					return ("you are already connected");
+				}
 				else
+				{
 					return ("wrong combination login/password");
+				}
 			case "register":
 				if (db.register(tabCommands) == true)
 					return ("you are registered");
@@ -33,13 +48,15 @@ public class ServerControler implements ActionListener, FocusListener, WindowLis
 					return ("something goes wrong");
 			case "getproducts":
 				if (db.getProducts(tabCommands))
-					return (db.getData(1));
+					return (db.getData(6));
 			case "getcategories":
 				if (db.getCategories(tabCommands))
-					return (db.getData(1));
+					return (db.getData(2));
 			case "addtocart":
-				db.addToCart(tabCommands);
-				break;
+				if (db.addToCart(tabCommands))
+					return ("OK");
+				else
+					return ("PAS OK");
 			case "pay":
 				db.pay(tabCommands);
 				break;
@@ -47,7 +64,7 @@ public class ServerControler implements ActionListener, FocusListener, WindowLis
 				db.getCartContent(tabCommands);
 				break;
 		}
-		return (new String("invalid command"));
+		return ("invalid command");
 	}
 
 	@Override

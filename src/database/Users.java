@@ -1,7 +1,6 @@
 package database;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class Users
 {
@@ -14,7 +13,7 @@ public class Users
 		requester = newOrm;
 	}
 
-	public ResultSet Login(String user, String password)
+	public ResultSet login(String user, String password)
 	{
 		try
 		{
@@ -32,7 +31,7 @@ public class Users
 		}
 	}
 
-	public boolean Register(String user, String password)
+	public boolean register(String user, String password)
 	{
 		requester.insert("users");
 		requester.column("login");
@@ -41,7 +40,7 @@ public class Users
 		requester.valuesString(user);
 		requester.valuesString(password);
 		requester.valuesBack();
-		if (requester.update() != 0)
+		if (requester.exeUpdate() != 0)
 			return (true);
 		return (false);
 	}

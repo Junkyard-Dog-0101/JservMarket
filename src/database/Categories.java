@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 public class Categories
 {
 	private Orm			requester;
-	public DbConnect	dbManager;
 	public ResultSet	myResultSet;
 
 	public Categories(Orm newOrm)
@@ -13,12 +12,12 @@ public class Categories
 		requester = newOrm;
 	}
 
-	public ResultSet getLabelCategories()
+	public ResultSet getCategories()
 	{
 		try
 		{
 			requester.clear();
-			requester.select("label");
+			requester.select("*");
 			requester.from("categories");
 			myResultSet = requester.query();
 			return (myResultSet);

@@ -3,6 +3,8 @@ package database;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/* n'oubliez pas de faire appelle à clear() avant chaque création de requète */
+
 public class Orm
 {
 	private String				mSelect;
@@ -10,6 +12,8 @@ public class Orm
 	private String				mValues;
 	private String				mColumn;
 	private String				mWhere;
+	private String				mUpdate;
+	private String				mSet;
 	private static DbConnect	db;
 
 	public Orm()
@@ -21,6 +25,20 @@ public class Orm
 	{
 		if (mInsert == null)
 			mInsert = "INSERT INTO " + s;
+		return (this);
+	}
+	
+	public Orm update(String s)
+	{
+		if (mUpdate == null)
+			mUpdate = "UPDATE " + s;
+		return (this);
+	}
+	
+	public Orm set(String s)
+	{
+		if (mSet == null)
+			mSet = " SET " + s;
 		return (this);
 	}
 	
@@ -55,6 +73,15 @@ public class Orm
 			mValues = " VALUES('" + s + "'";
 		else
 			mValues += ", '" + s + "'";	
+		return (this);
+	}
+	
+	public Orm valuesInt(String s)
+	{
+		if (mValues == null)
+			mValues = " VALUES(" + s;
+		else
+			mValues += ", " + s;	
 		return (this);
 	}
 	
@@ -130,14 +157,26 @@ public class Orm
 		return (null);
 	}
 
-	public int update()
+	public int exeUpdate()
 	{
 		try
 		{
-			if (mColumn != null)
-				return (db.executeUpdate(mInsert + mColumn + mValues));
+			System.out.println(mUpdate + mSet + mWhere);
+			System.out.println(mInsert + mColumn + mValues);
+			if (mInsert != null && mValues != null)
+			{
+				if (mColumn != null)
+					return (db.executeUpdate(mInsert + mColumn + mValues));
+				else
+					return (db.executeUpdate(mInsert + mValues));
+			}
 			else
-				return (db.executeUpdate(mInsert + mValues));
+			{
+				if (mWhere == null)
+					return (db.executeUpdate(mUpdate + mSet));
+				else
+					return (db.executeUpdate(mUpdate + mSet + mWhere));
+			}
 		}
 		catch (SQLException e)
 		{
@@ -153,5 +192,7 @@ public class Orm
 		mValues = null;
 		mColumn = null;
 		mWhere = null;
+		mUpdate = null;
+		mSet = null;
 	}
 }

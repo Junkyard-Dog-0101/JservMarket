@@ -15,8 +15,6 @@ public class ClientHandler implements Runnable
 	private PrintWriter		out;
 	private BufferedReader	in;
 	private ServerControler controler;
-	private String			login;
-	private String			cmd;
 	private DbManager		db;
 
 	public ClientHandler(Socket newClientSocket, ServerControler newControler) throws IOException
@@ -53,18 +51,7 @@ public class ClientHandler implements Runnable
 				}
 				controler.getView().getCommandView().updateContent(clientSocket.getInetAddress().getHostAddress() + " : " + buf);
 				String str[] = buf.split(";");
-				if ((cmd = controler.getCommand(str, login, db)) == "you are connected")
-				{
-					if (login == null)
-					{
-						login = str[1];
-					}
-					else
-					{
-						cmd = "you are already connected";
-					}
-				}
-				writeOnClient(cmd);
+				writeOnClient(controler.getCommand(str, db));
 			}
 		}
 		catch (IOException e)
