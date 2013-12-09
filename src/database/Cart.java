@@ -1,6 +1,7 @@
 package database;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class Cart
 {
@@ -18,7 +19,7 @@ public class Cart
 		{
 			requester.clear();
 			requester.select("*");
-			requester.from("products");
+			requester.from("cart");
 			myResultSet = requester.query();
 			return (myResultSet);
 		}
@@ -34,19 +35,46 @@ public class Cart
 		{
 			return (false);
 		}
-		requester.clear();
-		/* bug en base de donnée : créé des doublons */
-		requester.insert("cart");
-		requester.column("userid");
-		requester.column("productid");
-		requester.column("quantity");
-		requester.columnBack();
-		requester.valuesInt(idUser);
-		requester.valuesInt(idProduct);
-		requester.valuesInt(quantity);
-		requester.valuesBack();
-		if (requester.exeUpdate() != 0)
-			return (true);
+		try
+		{
+			requester.clear();
+			requester.select("*");
+			requester.from("cart");
+			requester.where("userid", "=", idUser);
+			myResultSet = requester.query();
+			if (myResultSet.next())
+			{
+				requester.clear();
+				requester.update("cart");
+				requester.set("quantity = quantity + " + quantity);
+				requester.where("userid", "=", idUser);
+				if (requester.exeUpdate() != 0)
+					return (true);
+			}
+			else
+			{
+				requester.clear();
+				requester.insert("cart");
+				requester.column("userid");
+				requester.column("productid");
+				requester.column("quantity");
+				requester.columnBack();
+				requester.valuesInt(idUser);
+				requester.valuesInt(idProduct);
+				requester.valuesInt(quantity);
+				requester.valuesBack();
+				if (requester.exeUpdate() != 0)
+					return (true);
+			}
+		}
+		catch (MyOrmException e)
+		{
+			
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
 		return (false);
 	}
 }
