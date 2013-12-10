@@ -32,21 +32,21 @@ public class UserListView extends JPanel
 				if (status == true)
 				{
 					entries.remove(str);
-					entries.add(new Shape(login, "C:\\Users\\Julien\\Documents\\GitHub\\JservMarket\\res\\greenLight2.png"));
+					entries.add(new Shape(login, ".\\res\\greenLight2.png"));
 				}
 				else
 				{
 					entries.remove(str);
-					entries.add(new Shape(login, "C:\\Users\\Julien\\Documents\\GitHub\\JservMarket\\res\\redLight2.png"));
+					entries.add(new Shape(login, ".\\res\\redLight2.png"));
 				}
 				updateScroll();
 				return;
 			}
 		}
 		if (status == true)
-			entries.add(new Shape(login, "C:\\Users\\Julien\\Documents\\GitHub\\JservMarket\\res\\greenLight2.png"));
+			entries.add(new Shape(login, ".\\res\\greenLight2.png"));
 		else
-			entries.add(new Shape(login, "C:\\Users\\Julien\\Documents\\GitHub\\JservMarket\\res\\redLight2.png"));
+			entries.add(new Shape(login, ".\\res\\redLight2.png"));
 		updateScroll();
 	}
 
