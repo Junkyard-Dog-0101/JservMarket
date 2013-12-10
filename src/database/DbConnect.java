@@ -11,7 +11,7 @@ public class DbConnect
 	private String				url = "jdbc:mysql://localhost/jservmarket";
 	private String				user = "root";
 	private String				password = "";
-	public Statement			myState;
+	private Statement			myState;
 	private static DbConnect	currentDb;
 
 	private DbConnect()

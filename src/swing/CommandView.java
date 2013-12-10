@@ -1,7 +1,6 @@
 package swing;
 
 import java.awt.Color;
-
 import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -14,7 +13,7 @@ public class CommandView extends JPanel
 	private DefaultListModel	entries;
 
 	@SuppressWarnings("unchecked")
-	public CommandView(ServerControler newControler)
+	public CommandView()
 	{
 		JLabel jlabel = new JLabel("Clients Entrance Commands :");
 		jlabel.setAlignmentX(0);
@@ -29,7 +28,7 @@ public class CommandView extends JPanel
 	}
 
 	@SuppressWarnings("unchecked")
-	public void updateContent(String newCommandList)
+	public synchronized void updateContent(String newCommandList)
 	{
 		entries.add(0, newCommandList);
 	}

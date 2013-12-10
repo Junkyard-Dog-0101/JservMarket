@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-
 import database.DbManager;
 import swing.ServerControler;
 
@@ -47,6 +46,8 @@ public class ClientHandler implements Runnable
 				if (buf == null)
 				{
 					clientSocket.close();
+					String[] tab = {"logout", db.getUserLogin()};
+					controler.getCommand(tab, db);
 					break;
 				}
 				controler.getView().getCommandView().updateContent(clientSocket.getInetAddress().getHostAddress() + " : " + buf);

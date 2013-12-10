@@ -6,44 +6,58 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 import database.DbManager;
 
 public class ServerControler implements ActionListener, FocusListener, WindowListener
 {
-	private ServerMainView	mainFrame;
-	private List<String>	loginList;
-
-	public ServerControler(ServerMainView conversionFrame)
+	private ServerMainView				mainFrame;
+	private HashMap<String, Boolean>	loginList;
+	private DbManager					db;
+	private UserListView				userView;
+	
+	public ServerControler(ServerMainView Frame)
 	{
-		loginList = new ArrayList<String>();
-		setConversionFrame(conversionFrame);
+		db = new DbManager();
+		db.getAllUser();
+		loginList = new HashMap<String, Boolean>();
+		mainFrame = Frame;
+		userView = mainFrame.getUserView();
+		setUserView(userView);
 	}
 
-	public String getCommand(String[] tabCommands, DbManager db)
+	private void setUserView(UserListView userView)
+	{
+		db.fillUsers(loginList, userView);
+	}
+
+	public synchronized String getCommand(String[] tabCommands, DbManager db)
 	{
 		switch (tabCommands[0])
 		{
 			case "login":
 				if (db.login(tabCommands) == true)
 				{
-					if (!loginList.contains(tabCommands[1]))
+					if (loginList.get(tabCommands[1]) == false)
 					{
-						/* risque de caca si plusieur user se log */
-						loginList.add(tabCommands[1]);
+						contentManager(tabCommands[1], true);
 						return ("you are connected");
 					}
-					return ("you are already connected");
+					else
+						return ("you are already connected");
 				}
 				else
 				{
 					return ("wrong combination login/password");
 				}
+				/* il faut géré les doublon en login*/
 			case "register":
 				if (db.register(tabCommands) == true)
+				{
+					contentManager(tabCommands[1], false);
 					return ("you are registered");
+				}
 				else
 					return ("something goes wrong");
 			case "getproducts":
@@ -54,17 +68,33 @@ public class ServerControler implements ActionListener, FocusListener, WindowLis
 					return (db.getData(2));
 			case "addtocart":
 				if (db.addToCart(tabCommands))
-					return ("OK");
+					return ("addtocart:succes");
 				else
-					return ("PAS OK");
+					return ("addtocart:fail");
 			case "pay":
-				db.pay(tabCommands);
-				break;
+				if (db.pay(tabCommands))
+					return ("pay:succes");
+				else
+					return ("pay:fail");
 			case "getcartcontent":
-				db.getCartContent(tabCommands);
-				break;
+				if (db.getCartContent(tabCommands))
+					return (db.getData(4));
+				else
+					return ("not log in");
+			case "logout":
+				if (loginList.get(tabCommands[1]) == true)
+				{
+					contentManager(tabCommands[1], false);
+					return ("you are disconnect");
+				}
 		}
 		return ("invalid command");
+	}
+
+	private synchronized void contentManager(String tabCommands, boolean b)
+	{
+		loginList.put(tabCommands, b);
+		userView.updateContent(tabCommands, b);
 	}
 
 	@Override
@@ -102,12 +132,8 @@ public class ServerControler implements ActionListener, FocusListener, WindowLis
 	@Override
 	public void actionPerformed(ActionEvent arg0){}
 
-	public void setConversionFrame(ServerMainView conversionFrame)
-	{
-		this.mainFrame = conversionFrame;
-	}
 
-	public synchronized ServerMainView getView()
+	public ServerMainView getView()
 	{
 		return (mainFrame);
 	}

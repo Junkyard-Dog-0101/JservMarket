@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 public class Users
 {
 	private Orm			requester;
-	public DbConnect	dbManager;
 	public ResultSet	myResultSet;
 
 	public Users(Orm newOrm)
@@ -13,6 +12,22 @@ public class Users
 		requester = newOrm;
 	}
 
+	public ResultSet getAllUser()
+	{
+		try
+		{
+			requester.clear();
+			requester.select("*");
+			requester.from("users");
+			myResultSet = requester.query();
+			return (myResultSet);
+		}
+		catch (MyOrmException e)
+		{
+			return (null);
+		}
+	}
+	
 	public ResultSet login(String user, String password)
 	{
 		try

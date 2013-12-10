@@ -13,13 +13,14 @@ public class Cart
 		requester = newOrm;
 	}
 
-	public ResultSet getCartContentByIdUser(int id)
+	public ResultSet getCartContentByIdUser(String id)
 	{
 		try
 		{
 			requester.clear();
 			requester.select("*");
 			requester.from("cart");
+			requester.where("userid", "=", id);
 			myResultSet = requester.query();
 			return (myResultSet);
 		}
@@ -29,9 +30,14 @@ public class Cart
 		}
 	}
 
+	public boolean pay()
+	{
+		return false;
+	}
+	
 	public boolean addContentToCart(String idUser, String idProduct, String quantity, Products product)
 	{
-		if (!product.tryDeleteQuantityFromProduct(quantity, idProduct))
+		if (!product.deleteQuantityFromProduct(quantity, idProduct))
 		{
 			return (false);
 		}

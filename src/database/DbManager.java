@@ -1,7 +1,12 @@
 package database;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+
+import swing.UserListView;
 import database.Products;
 import database.Users;
 
@@ -13,7 +18,9 @@ public class DbManager
 	private Products	product;
 	private Categories	categorie;
 	private String		userId;
+	private String		userLogin;
 	private	ResultSet	lastResult;
+//	private String		failLog;
 
 	public DbManager()
 	{
@@ -24,15 +31,29 @@ public class DbManager
 		product = new Products(myOrm);
 	}
 
+	public boolean getAllUser()
+	{
+		lastResult = user.getAllUser();
+		return (true);
+	}
 	public boolean login(String[] tabCommands)
 	{
 		if (tabCommands.length >= 3)
 		{
-			lastResult = user.login(tabCommands[1], tabCommands[2]);
+			try
+			{
+				lastResult = user.login(tabCommands[1], new String(MessageDigest.getInstance("MD5" ).digest(tabCommands[2].getBytes())));
+			}
+			catch (NoSuchAlgorithmException e1)
+			{
+				e1.printStackTrace();
+				return (false);
+			}
 			try
 			{
 				if (lastResult.next())
 				{
+					userLogin = lastResult.getString(2);
 					userId = lastResult.getString(1);
 					return (true);
 				}
@@ -50,7 +71,15 @@ public class DbManager
 		if (tabCommands.length >= 3)
 		{
 			lastResult = null;
-			return (user.register(tabCommands[1], tabCommands[2]));
+			try
+			{
+				return (user.register(tabCommands[1], new String(MessageDigest.getInstance("MD5" ).digest(tabCommands[2].getBytes()))));
+			}
+			catch (NoSuchAlgorithmException e)
+			{
+				e.printStackTrace();
+				return (false);
+			}
 		}
 		else
 		{
@@ -72,7 +101,7 @@ public class DbManager
 
 	public boolean addToCart(String[] tabCommands)
 	{
-		if (userId.isEmpty() || (tabCommands.length < 3))
+		if ((userId == null) || (tabCommands.length < 3))
 			return (false);
 		else
 			return (cart.addContentToCart(userId, tabCommands[1], tabCommands[2], product));
@@ -80,12 +109,20 @@ public class DbManager
 
 	public boolean pay(String[] tabCommands)
 	{
+		if (userId == null)
+			return (false);
 		return (true);
 	}
 
 	public boolean getCartContent(String[] tabCommands)
 	{
-		return (true);
+		if (userId == null)
+			return (false);
+		else
+		{
+			lastResult = cart.getCartContentByIdUser(userId);
+			return (true);
+		}
 	}
 	
 	public String getData(int nbrColumn)
@@ -107,5 +144,26 @@ public class DbManager
 		{
 			return (null);
 		}
+	}
+
+	public void fillUsers(HashMap<String, Boolean> loginList, UserListView userView)
+	{
+		try
+		{
+			while (lastResult.next())
+			{
+				loginList.put(lastResult.getString(2), false);
+				userView.updateContent(lastResult.getString(2), false);
+			}
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public String getUserLogin()
+	{
+		return (userLogin);
 	}
 }

@@ -13,7 +13,7 @@ public class Products
 		requester = newOrm;
 	}
 
-	public boolean tryDeleteQuantityFromProduct(String quantity, String idProduct)
+	public boolean deleteQuantityFromProduct(String quantity, String idProduct)
 	{
 		try
 		{

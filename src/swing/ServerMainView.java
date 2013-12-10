@@ -9,11 +9,13 @@ public class ServerMainView extends JFrame
 {
 	private ServerControler	controler;
 	private CommandView		panelCommand;
+	private UserListView	panelUser;
 
 	public ServerMainView()
 	{
+		panelCommand = new CommandView();
+		panelUser = new UserListView();
 		controler = new ServerControler(this);
-		panelCommand = new CommandView(controler);
 		stateOnCurrentObject();
 		addComponents();
 	}
@@ -31,15 +33,21 @@ public class ServerMainView extends JFrame
 	public void addComponents()
 	{
 		add(panelCommand);
+		add(panelUser);
 	}
-	
+
 	public ServerControler getControler()
 	{
 		return (controler);
 	}
-	
+
 	public CommandView getCommandView()
 	{
 		return (panelCommand);
+	}
+
+	public UserListView getUserView()
+	{
+		return (panelUser);
 	}
 }
