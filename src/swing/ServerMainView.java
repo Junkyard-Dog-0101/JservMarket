@@ -32,6 +32,7 @@ public class ServerMainView extends JFrame
 
 	public void addComponents()
 	{
+//		panelCommand.setSize(50,500);
 		add(panelCommand);
 		add(panelUser);
 	}

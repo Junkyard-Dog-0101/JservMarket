@@ -110,8 +110,8 @@ public class DbManager
 	public boolean pay(String[] tabCommands)
 	{
 		if (userId == null)
-			return (false);
-		return (true);
+			return (false);		
+		return (cart.pay(userId));
 	}
 
 	public boolean getCartContent(String[] tabCommands)

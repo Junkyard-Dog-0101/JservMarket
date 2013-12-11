@@ -30,11 +30,35 @@ public class Cart
 		}
 	}
 
-	public boolean pay()
+	public boolean pay(String idUser)
 	{
-		return false;
+		try
+		{
+			requester.clear();
+			requester.select("*");
+			requester.from("cart");
+			requester.where("userid", "=", idUser);
+			myResultSet = requester.query();
+			if (myResultSet.next())
+			{
+				requester.clear();
+				requester.delete("cart");
+				requester.where("userid", "=", idUser);
+				if (requester.exeUpdate() != 0)
+					return (true);
+			}
+		}
+		catch (MyOrmException e)
+		{
+			e.printStackTrace();
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return (false);
 	}
-	
+
 	public boolean addContentToCart(String idUser, String idProduct, String quantity, Products product)
 	{
 		if (!product.deleteQuantityFromProduct(quantity, idProduct))

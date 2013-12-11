@@ -15,16 +15,35 @@ public class UserListView extends JPanel
 	private ArrayList<Shape>	entries;
 	private JScrollPane			scrollList;
 
+	@SuppressWarnings("unchecked")
 	public UserListView()
 	{
 		setLayout(new GridLayout(1,1));
+/*		JLabel jlabel = new JLabel("Clients Entrance Commands :");
+		jlabel.setAlignmentX(0);
+		add(jlabel);*/
 		entries = new ArrayList<Shape>();
-		updateScroll();
+		sampleJList = new JList(entries.toArray());
+		sampleJList.setCellRenderer(
+				new DefaultListCellRenderer()
+				{
+					public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus)
+					{
+						Shape shape = (Shape)value;
+						setBackground(Color.white);
+						setText(shape.getType());
+						setIcon(shape.getImage());
+						return (this);
+					}
+				});
+		scrollList = new JScrollPane(sampleJList);
+		scrollList.setVisible(true);
+		add(scrollList);
 	}
 
+	@SuppressWarnings("unchecked")
 	public synchronized void updateContent(String login, boolean status)
 	{
-		remove(scrollList);
 		for (Shape str : entries)
 		{
 			if (str.getType().equals(login))
@@ -39,7 +58,7 @@ public class UserListView extends JPanel
 					entries.remove(str);
 					entries.add(new Shape(login, ".\\res\\redLight2.png"));
 				}
-				updateScroll();
+				sampleJList.setListData(entries.toArray());
 				return;
 			}
 		}
@@ -47,29 +66,6 @@ public class UserListView extends JPanel
 			entries.add(new Shape(login, ".\\res\\greenLight2.png"));
 		else
 			entries.add(new Shape(login, ".\\res\\redLight2.png"));
-		updateScroll();
-	}
-
-	@SuppressWarnings("unchecked")
-	private void updateScroll()
-	{
-		sampleJList = new JList(entries.toArray());
-		sampleJList.setCellRenderer(new DefaultListCellRenderer()
-		{
-		    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus)
-		    {
-		        Shape shape = (Shape)value;
-		        setBackground(Color.white);
-		        setText(shape.getType());
-		        setIcon(shape.getImage());
-		        return (this);
-		    }
-		});
-		scrollList = new JScrollPane(sampleJList);
-		scrollList.setVisible(true);
-		add(scrollList);
-		scrollList.repaint();
-		validate();
-		scrollList.validate();
+		sampleJList.setListData(entries.toArray());
 	}
 }

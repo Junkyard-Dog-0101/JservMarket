@@ -14,6 +14,7 @@ public class Orm
 	private String				mWhere;
 	private String				mUpdate;
 	private String				mSet;
+	private String				mDelete;
 	private static DbConnect	db;
 
 	public Orm()
@@ -25,6 +26,13 @@ public class Orm
 	{
 		if (mInsert == null)
 			mInsert = "INSERT INTO " + s;
+		return (this);
+	}
+	
+	public Orm delete(String s)
+	{
+		if (mDelete == null)
+			mDelete = "DELETE FROM " + s;
 		return (this);
 	}
 	
@@ -170,6 +178,13 @@ public class Orm
 				else
 					return (db.executeUpdate(mInsert + mValues));
 			}
+			else if (mDelete != null)
+			{
+				if (mWhere == null)
+					return (db.executeUpdate(mDelete));
+				else
+					return (db.executeUpdate(mDelete + mWhere));
+			}
 			else
 			{
 				if (mWhere == null)
@@ -194,5 +209,6 @@ public class Orm
 		mWhere = null;
 		mUpdate = null;
 		mSet = null;
+		mDelete = null;
 	}
 }
