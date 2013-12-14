@@ -1,11 +1,8 @@
 package database;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
-
 import swing.UserListView;
 import database.Products;
 import database.Users;
@@ -20,7 +17,7 @@ public class DbManager
 	private String		userId;
 	private String		userLogin;
 	private	ResultSet	lastResult;
-//	private String		failLog;
+	private String		failLog;
 
 	public DbManager()
 	{
@@ -36,19 +33,12 @@ public class DbManager
 		lastResult = user.getAllUser();
 		return (true);
 	}
+
 	public boolean login(String[] tabCommands)
 	{
 		if (tabCommands.length >= 3)
 		{
-			try
-			{
-				lastResult = user.login(tabCommands[1], new String(MessageDigest.getInstance("MD5" ).digest(tabCommands[2].getBytes())));
-			}
-			catch (NoSuchAlgorithmException e1)
-			{
-				e1.printStackTrace();
-				return (false);
-			}
+			lastResult = user.login(tabCommands[1], tabCommands[2]);
 			try
 			{
 				if (lastResult.next())
@@ -60,9 +50,14 @@ public class DbManager
 			}
 			catch (SQLException e)
 			{
-				
+				return (false);
+			}
+			catch (java.lang.NullPointerException e)
+			{
+				return (false);
 			}
 		}
+		failLog = "wrong combination login/password";
 		return (false);
 	}
 
@@ -71,15 +66,7 @@ public class DbManager
 		if (tabCommands.length >= 3)
 		{
 			lastResult = null;
-			try
-			{
-				return (user.register(tabCommands[1], new String(MessageDigest.getInstance("MD5" ).digest(tabCommands[2].getBytes()))));
-			}
-			catch (NoSuchAlgorithmException e)
-			{
-				e.printStackTrace();
-				return (false);
-			}
+			return (user.register(tabCommands[1], tabCommands[2]));
 		}
 		else
 		{
@@ -101,23 +88,60 @@ public class DbManager
 
 	public boolean addToCart(String[] tabCommands)
 	{
-		if ((userId == null) || (tabCommands.length < 3))
+		if ((userId == null))
+		{
+			setFailLog("addtocart : not login");
 			return (false);
+		}
+		else if (tabCommands.length < 3)
+		{
+			setFailLog("addtocart : invalid command line");
+			return (false);
+		}
 		else
-			return (cart.addContentToCart(userId, tabCommands[1], tabCommands[2], product));
+		{
+			try
+			{
+				Integer.parseInt(tabCommands[1]);
+				Integer.parseInt(tabCommands[2]);
+			}
+			catch (NumberFormatException e)
+			{
+				setFailLog("addtocart : invalid Id");
+				return (false);
+			}
+			if (cart.addContentToCart(userId, tabCommands[1], tabCommands[2], product))
+			{
+				return (true);
+			}
+			else
+			{
+				failLog = "addtocart : sql error";
+				return (false);
+			}
+		}
 	}
 
 	public boolean pay(String[] tabCommands)
 	{
 		if (userId == null)
-			return (false);		
-		return (cart.pay(userId));
+		{
+			setFailLog("pay : Not Login");
+			return (false);
+		}
+		else
+		{
+			return (cart.pay(userId));
+		}
 	}
 
 	public boolean getCartContent(String[] tabCommands)
 	{
 		if (userId == null)
+		{
+			setFailLog("getcartcontent : Not Login");
 			return (false);
+		}
 		else
 		{
 			lastResult = cart.getCartContentByIdUser(userId);
@@ -165,5 +189,25 @@ public class DbManager
 	public String getUserLogin()
 	{
 		return (userLogin);
+	}
+
+	public String getFailLog()
+	{
+		return (failLog);
+	}
+
+	public void setFailLog(String failLog)
+	{
+		this.failLog = failLog;
+	}
+
+	public void setUserId(String s)
+	{
+		userId = s;
+	}
+
+	public void setUserLogin(String s)
+	{
+		userLogin = null;
 	}
 }

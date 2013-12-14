@@ -7,7 +7,6 @@ import java.awt.event.FocusListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.HashMap;
-
 import database.DbManager;
 
 public class ServerControler implements ActionListener, FocusListener, WindowListener
@@ -45,13 +44,14 @@ public class ServerControler implements ActionListener, FocusListener, WindowLis
 						return ("you are connected");
 					}
 					else
+					{
 						return ("you are already connected");
+					}
 				}
 				else
 				{
-					return ("wrong combination login/password");
+					return (db.getFailLog());
 				}
-				/* il faut géré les doublon en login*/
 			case "register":
 				if (db.register(tabCommands) == true)
 				{
@@ -68,24 +68,29 @@ public class ServerControler implements ActionListener, FocusListener, WindowLis
 					return (db.getData(2));
 			case "addtocart":
 				if (db.addToCart(tabCommands))
-					return ("addtocart:succes");
+					return ("addtocart : succes");
 				else
-					return ("addtocart:fail");
+					return (db.getFailLog());
 			case "pay":
 				if (db.pay(tabCommands))
-					return ("pay:succes");
+					return ("pay : succes");
 				else
-					return ("pay:fail");
+					return (db.getFailLog());
 			case "getcartcontent":
 				if (db.getCartContent(tabCommands))
 					return (db.getData(4));
 				else
-					return ("not log in");
+					return (db.getFailLog());
 			case "logout":
-				if (loginList.get(tabCommands[1]) == true)
+				if (db.getUserLogin() != null)
 				{
-					contentManager(tabCommands[1], false);
-					return ("you are disconnect");
+					if (loginList.get(db.getUserLogin()) == true)
+					{
+						contentManager(db.getUserLogin(), false);
+						db.setUserId(null);
+						db.setUserLogin(null);
+						return ("you are disconnect");
+					}
 				}
 		}
 		return ("invalid command");

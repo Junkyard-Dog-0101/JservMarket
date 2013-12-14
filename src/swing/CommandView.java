@@ -15,13 +15,13 @@ public class CommandView extends JPanel
 	@SuppressWarnings("unchecked")
 	public CommandView()
 	{
-		JLabel jlabel = new JLabel("Clients Entrance Commands :");
+		JLabel jlabel = new JLabel("Clients Commands :");
 		jlabel.setAlignmentX(0);
 		add(jlabel);
 		entries = new DefaultListModel();
 		sampleJList = new JList(entries);
 		setBackground(Color.white);
-		sampleJList.setFixedCellWidth(940);
+		sampleJList.setFixedCellWidth(900);
 		sampleJList.setVisibleRowCount(10);
 		JScrollPane listPane = new JScrollPane(sampleJList);
 		add(listPane);

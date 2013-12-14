@@ -22,7 +22,10 @@ public class Products
 			requester.from("products");
 			requester.where("id", "=", idProduct);
 			myResultSet = requester.query();
-			myResultSet.next();
+			if (!myResultSet.next())
+			{
+				return (false);
+			}
 			if (Integer.parseInt(myResultSet.getString(1)) < Integer.parseInt(quantity))
 				return (false);
 			requester.clear();

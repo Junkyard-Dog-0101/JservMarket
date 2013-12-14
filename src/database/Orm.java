@@ -58,7 +58,7 @@ public class Orm
 			mColumn += ", " + s;
 		return (this);
 	}
-	
+
 	public Orm columnBack()
 	{
 		if (mColumn != null)
@@ -81,6 +81,15 @@ public class Orm
 			mValues = " VALUES('" + s + "'";
 		else
 			mValues += ", '" + s + "'";	
+		return (this);
+	}
+	
+	public Orm valuesStringMD5(String s)
+	{
+		if (mValues == null)
+			mValues = " VALUES( MD5('" + s + "')";
+		else
+			mValues += ", MD5('" + s + "')";	
 		return (this);
 	}
 	
@@ -144,6 +153,19 @@ public class Orm
 		else
 		{
 			mWhere += " AND " + field + op + "'" + value + "'";
+		}
+		return this;
+	}
+	
+	public Orm andMD5(String field, String op, String value) throws MyOrmException
+	{
+		if (mWhere == null)
+		{
+			throw new MyOrmException("And : no Where");
+		}
+		else
+		{
+			mWhere += " AND " + field + op + " MD5('" + value + "')";
 		}
 		return this;
 	}

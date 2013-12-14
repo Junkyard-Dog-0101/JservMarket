@@ -2,9 +2,9 @@ package swing;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.GridLayout;
 import java.util.ArrayList;
 import javax.swing.DefaultListCellRenderer;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -18,10 +18,10 @@ public class UserListView extends JPanel
 	@SuppressWarnings("unchecked")
 	public UserListView()
 	{
-		setLayout(new GridLayout(1,1));
-/*		JLabel jlabel = new JLabel("Clients Entrance Commands :");
+		setBackground(Color.white);
+		JLabel jlabel = new JLabel("Clients List :");
 		jlabel.setAlignmentX(0);
-		add(jlabel);*/
+		add(jlabel);
 		entries = new ArrayList<Shape>();
 		sampleJList = new JList(entries.toArray());
 		sampleJList.setCellRenderer(
@@ -36,6 +36,8 @@ public class UserListView extends JPanel
 						return (this);
 					}
 				});
+		sampleJList.setFixedCellWidth(900);
+		sampleJList.setVisibleRowCount(10);
 		scrollList = new JScrollPane(sampleJList);
 		scrollList.setVisible(true);
 		add(scrollList);
@@ -51,12 +53,12 @@ public class UserListView extends JPanel
 				if (status == true)
 				{
 					entries.remove(str);
-					entries.add(new Shape(login, ".\\res\\greenLight2.png"));
+					entries.add(0, new Shape(login, ".\\res\\greenLight2.png"));
 				}
 				else
 				{
 					entries.remove(str);
-					entries.add(new Shape(login, ".\\res\\redLight2.png"));
+					entries.add(0, new Shape(login, ".\\res\\redLight2.png"));
 				}
 				sampleJList.setListData(entries.toArray());
 				return;
