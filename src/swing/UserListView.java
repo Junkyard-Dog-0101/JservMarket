@@ -3,6 +3,7 @@ package swing;
 import java.awt.Color;
 import java.awt.Component;
 import java.util.ArrayList;
+
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -15,7 +16,6 @@ public class UserListView extends JPanel
 	private ArrayList<Shape>	entries;
 	private JScrollPane			scrollList;
 
-	@SuppressWarnings("unchecked")
 	public UserListView()
 	{
 		setBackground(Color.white);
@@ -43,7 +43,6 @@ public class UserListView extends JPanel
 		add(scrollList);
 	}
 
-	@SuppressWarnings("unchecked")
 	public synchronized void updateContent(String login, boolean status)
 	{
 		for (Shape str : entries)

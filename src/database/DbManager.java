@@ -43,9 +43,17 @@ public class DbManager
 			{
 				if (lastResult.next())
 				{
-					userLogin = lastResult.getString(2);
-					userId = lastResult.getString(1);
-					return (true);
+					if (userLogin == null)
+					{
+						userLogin = lastResult.getString(2);
+						userId = lastResult.getString(1);
+						return (true);
+					}
+					else
+					{
+						failLog = "you're already connected";
+						return (false);
+					}
 				}
 			}
 			catch (SQLException e)
@@ -131,7 +139,15 @@ public class DbManager
 		}
 		else
 		{
-			return (cart.pay(userId));
+			if (!cart.pay(userId))
+			{
+				setFailLog("empty cart");
+				return (false);
+			}
+			else
+			{
+				return (true);
+			}
 		}
 	}
 
