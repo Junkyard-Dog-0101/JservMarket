@@ -41,46 +41,49 @@ public class ServerControler implements ActionListener, FocusListener, WindowLis
 					if (loginList.get(tabCommands[1]) == false)
 					{
 						contentManager(tabCommands[1], true);
-						return ("you are connected");
+						return ("login:ok");
 					}
 					else
 					{
-						return ("you are already connected");
+						return ("login:error");
 					}
 				}
 				else
 				{
-					return (db.getFailLog());
+					//return (db.getFailLog());
+					return ("login:error");
 				}
 			case "register":
 				if (db.register(tabCommands) == true)
 				{
 					contentManager(tabCommands[1], false);
-					return ("you are registered");
+					return ("register:ok");
 				}
 				else
-					return ("something goes wrong");
+					return ("register:error");
 			case "getproducts":
 				if (db.getProducts(tabCommands))
-					return (db.getData(6));
+					return ("getproducts:" + db.getData(6));
 			case "getcategories":
 				if (db.getCategories(tabCommands))
-					return (db.getData(2));
+					return ("getcategories" + db.getData(2));
 			case "addtocart":
 				if (db.addToCart(tabCommands))
-					return ("addtocart : succes");
+					return ("addtocart:ok");
 				else
-					return (db.getFailLog());
+					//return (db.getFailLog());
+					return ("addtocart:error");
 			case "pay":
 				if (db.pay(tabCommands))
-					return ("pay : succes");
+					return ("pay:ok");
 				else
-					return (db.getFailLog());
+					//return (db.getFailLog());
+					return ("pay:error");
 			case "getcartcontent":
 				if (db.getCartContent(tabCommands))
-					return (db.getData(4));
+					return ("getcartcontent:" + db.getData(4));
 				else
-					return (db.getFailLog());
+					return ("getcartconten:error");
 			case "logout":
 				if (db.getUserLogin() != null)
 				{
