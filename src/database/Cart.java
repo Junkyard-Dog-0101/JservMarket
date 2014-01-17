@@ -71,6 +71,7 @@ public class Cart
 			requester.select("*");
 			requester.from("cart");
 			requester.where("userid", "=", idUser);
+			requester.and("productid", "=", idProduct);
 			myResultSet = requester.query();
 			if (myResultSet.next())
 			{
